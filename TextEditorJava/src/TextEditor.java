@@ -9,7 +9,10 @@ public class TextEditor extends JFrame implements ActionListener {
 
     JTextArea textArea;
     JScrollPane scrollPane;
+    JLabel fontLabel;
     JSpinner fontSizeSpinner;
+    JButton fontColorButton;
+    JComboBox fontBox;
 
     TextEditor(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -27,6 +30,8 @@ public class TextEditor extends JFrame implements ActionListener {
         scrollPane.setPreferredSize(new Dimension(450,450));
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
+        fontLabel = new JLabel("Font: ");
+
         fontSizeSpinner = new JSpinner();
         fontSizeSpinner.setPreferredSize(new Dimension(50,25));
         fontSizeSpinner.setValue(20);
@@ -37,7 +42,20 @@ public class TextEditor extends JFrame implements ActionListener {
             }
         });
 
+        fontColorButton = new JButton("Color");
+        fontColorButton.addActionListener(this);
+
+        String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+
+        fontBox = new JComboBox<>(fonts);
+        fontBox.addActionListener(this);
+        fontBox.setSelectedItem("Arial");
+
+
+        this.add(fontLabel);
         this.add(fontSizeSpinner);
+        this.add(fontColorButton);
+        this.add(fontBox);
         this.add(scrollPane);
         this.setVisible(true);
 
@@ -46,5 +64,15 @@ public class TextEditor extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        if(e.getSource() == fontColorButton){
+
+            Color color = JColorChooser.showDialog(null, "Choose a color", Color.black);
+
+            textArea.setForeground(color);
+        }
+
+        if(e.getSource() == fontBox){
+            textArea.setFont(new Font((String)fontBox.getSelectedItem(),Font.PLAIN, textArea.getFont().getSize()));
+        }
     }
 }
